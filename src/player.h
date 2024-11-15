@@ -14,7 +14,7 @@ typedef struct Node{
 typedef struct{
 	int size;
 	int pts;
-	int speed;
+	double speed;
 	int direc;
 	struct Node *head;
 	struct Node *last;
@@ -27,11 +27,15 @@ void loadPlayer(); //talvez n exista
 
 void grow();
 void move();
-void changeDirec();
+void changeDirec(int newDirec);
 int autoHit();
 
+void speedUp(double num);
+void speedDown(double num);
+
+double getPlayerSpeed();
 int getPlayerPts();
 int getPlayerDirec();
 int getPlayerSize();
-Node* getHead();
+Node* getPlayerHead();
 

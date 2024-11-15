@@ -26,7 +26,7 @@ int startPlayer(){
 	
 	player->pts = 0;
 	player->size = 1;
-	player->speed = 50;
+	player->speed = 1;
 	player->direc = -1;
 
 	player->head = head;
@@ -62,29 +62,41 @@ void grow(){
 	growth->x = player->last->x;
 	growth->y = player->last->y;	
 	
+	player->size++;
+
 	player->last->next = growth;
+}
+
+void moveBody(){
+	Node* aux = player->head->next;
+
+	while(aux != NULL){
+		aux->x = aux->before->x;
+		aux->y = aux->before->y;
+
+		aux = aux->next;
+	}
 }
 
 void move(){
 	switch(player->direc){
 		case UP:
 			player->head->y = player->head->y - 1;
+			moveBody();
 			break;
 		case DOWN:
 			player->head->y = player->head->y + 1;
+			moveBody();
 			break;
 		case LEFT:
 			player->head->x = player->head->x - 1;
+			moveBody();
 			break;
 		case RIGHT:
 			player->head->x = player->head->x + 1;
+			moveBody();
 			break;
 	}
-}
-
-void changeDirec(int newDirec){	
-	if(player->size == 1 || canChangeDirec(newDirec))
-		player->direc = newDirec;
 }
 
 int canChangeDirec(int newDirec){
@@ -94,6 +106,11 @@ int canChangeDirec(int newDirec){
 		(player->direc != LEFT && newDirec == RIGHT) ||
 		(player->direc != RIGHT && newDirec == LEFT)
 	);
+}
+
+void changeDirec(int newDirec){	
+	if(player->size == 1 || canChangeDirec(newDirec))
+		player->direc = newDirec;
 }
 
 int autoHit(){
@@ -109,6 +126,17 @@ int autoHit(){
 	return 0;
 }
 
+void speedUp(double num){
+	player->speed -= num;
+}
+void speedDown(double num){
+	player->speed += num;
+}
+
+double getPlayerSpeed(){
+	return player->speed;
+}
+
 int getPlayerDirec(){
 	return player->direc;
 }
@@ -117,6 +145,6 @@ int getPlayerSize(){
 	return player->size;
 }
 
-Node* getHead(){
+Node* getPlayerHead(){
 	return player->head;
 }
