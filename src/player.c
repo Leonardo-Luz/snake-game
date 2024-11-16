@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "player.h"
@@ -59,48 +60,49 @@ void grow(){
 	
 	growth->next = NULL;
 	growth->before = player->last;
+
 	growth->x = player->last->x;
-	growth->y = player->last->y;	
+	growth->y = player->last->y;
 	
 	player->size++;
 
 	player->last->next = growth;
+	player->last = growth;
 }
 
-void moveBody(){
-	Node* aux = player->head->next;
+void moveBody(int x, int y){
+	Node* aux = player->last;
 
-	while(aux != NULL){
+	while(aux->before != NULL){
 		aux->x = aux->before->x;
 		aux->y = aux->before->y;
 
-		aux = aux->next;
+		aux = aux->before;
 	}
+
+	aux->x = aux->x + x;
+	aux->y = aux->y + y;
 }
 
 void move(){
 	switch(player->direc){
 		case UP:
-			player->head->y = player->head->y - 1;
-			moveBody();
+			moveBody( 0, -1 );
 			break;
 		case DOWN:
-			player->head->y = player->head->y + 1;
-			moveBody();
+			moveBody( 0, 1 );
 			break;
 		case LEFT:
-			player->head->x = player->head->x - 1;
-			moveBody();
+			moveBody( -1, 0 );
 			break;
 		case RIGHT:
-			player->head->x = player->head->x + 1;
-			moveBody();
+			moveBody( 1, 0 );
 			break;
 	}
 }
 
 int canChangeDirec(int newDirec){
-	return (
+	return ( // FIX: If I input down left when i was going right snake goes through its own body
 		(player->direc != UP && newDirec == DOWN) ||
 		(player->direc != DOWN && newDirec == UP) ||
 		(player->direc != LEFT && newDirec == RIGHT) ||
@@ -116,7 +118,7 @@ void changeDirec(int newDirec){
 int autoHit(){
 	Node *aux = player->head->next;
 	
-	while(aux != NULL){
+	while(aux != NULL){ // FIX: Snake growns inside her self, making it to stop on spot
 		if(aux->x == player->head->x && aux->y == player->head->y)
 			return 1;
 

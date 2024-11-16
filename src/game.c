@@ -19,13 +19,13 @@ double timer = 0;
 // NOTE: FUNCTIONS
 void playerMove(){
 	Node* aux = getPlayerHead();
+	
 	while(aux != NULL){
 		DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, BLACK);
 
-		printf("\n%d %d", aux->x, getPlayerSize());
-
 		aux = aux->next;
 	}
+
 }
 
 void draw( int x, int y ){
@@ -49,6 +49,7 @@ bool canMove(){
 		head->x + (direc == RIGHT ? 1 : 0) >= GRID || // NOTE: POS X > 600 / 20
 		head->y - (direc == UP ? 1 : 0) < 0 || // NOTE: POS Y < 0
 		head->y + (direc == DOWN ? 1 : 0) >= GRID // NOTE: POS Y > 600 / 20
+		|| autoHit()
 	)
 		return false;
 
@@ -57,11 +58,13 @@ bool canMove(){
 
 void loop(){
 	int auxDirec = 0;
-
+	
 	timer = GetTime();
 
 	while(!WindowShouldClose()){
 		draw(round(timer) * TILE, round(timer) * TILE);
+
+		
 
 		auxDirec = GetCharPressed();
 
@@ -84,11 +87,13 @@ void loop(){
 			case 'c':
 				speedDown(0.05f);
 				break;
+			case 'g':
+				grow();
+				break;
 		}
 		
 		if(canMove() && ((GetTime() - timer) > getPlayerSpeed())){
 			move();
-			grow();
 			timer = GetTime();
 		}
 	}
@@ -96,7 +101,10 @@ void loop(){
 
 int main(int argc, char *argv[]) {
 
-	startPlayer();
+	if(!startPlayer()){
+		printf("\nError on start!\n");
+		return 1;
+	}
 
 	// NOTE: RAYLIB INIT
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake Game");
