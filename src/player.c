@@ -28,8 +28,8 @@ int startPlayer(){
 	int windowLimit = 20;
 
 	while(head->x < windowOffset || head->x > windowLimit || head->y < windowOffset || head->y > windowLimit ){
-		head->x = rand() % 21;
-		head->y = rand() % 21;
+		head->x = rand() % 20;
+		head->y = rand() % 20;
 	}
 
 	head->before = NULL;
@@ -49,19 +49,13 @@ int startPlayer(){
 void endPlayer(){
 	Node *aux = player->last->before;
 	
-	int i;
-	for(i = player->size; i > 0; i--)
+	while(aux->before != NULL)
 	{
-		if(i == 1)
-		{
-			free(player->head);
-			break;
-		}
-				
 		free(aux->next);
 		aux = aux->before;
 	}
 
+	free(player->head);
 	free(player);
 }
 
@@ -163,4 +157,8 @@ int getPlayerSize(){
 
 Node* getPlayerHead(){
 	return player->head;
+}
+
+int getPlayerPts(){
+	return player->pts;
 }

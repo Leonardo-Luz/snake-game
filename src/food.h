@@ -20,4 +20,6 @@ void endFood();
 
 void foodSpawn();
 
-int consumeFood();
+int consumeFood(int x, int y, int *pts);
+
+Food** getFoods();

@@ -25,6 +25,20 @@ void playerMove(){
 	}
 }
 
+void foodDraw(){
+	Food** foods = getFoods();
+	
+	int count = 0;
+	Food* aux = foods[0];
+
+	while(aux != NULL){
+		DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
+
+		count++;
+		aux = foods[count];
+	}
+}
+
 void draw( int x, int y ){
 	BeginDrawing();
 
@@ -34,6 +48,8 @@ void draw( int x, int y ){
 	DrawText("Hello World", TILE, TILE, 20, BLACK);
 
 	playerMove();
+
+	foodDraw();
 
 	EndDrawing();
 }
@@ -58,6 +74,7 @@ bool canMove(){
 void loop(){
 	int auxDirec = 0;
 	bool pressed = false;
+	int foodSpawnRate = 5;
 
 	timer = GetTime();
 
@@ -93,20 +110,35 @@ void loop(){
 			}
 		}
 		
-		if(canMove() && ((GetTime() - timer) > getPlayerSpeed())){
-			move();
+		if(((GetTime() - timer) > getPlayerSpeed())){
+			int* temp; // FIX: getPlayerPts() isnt working
+			if(consumeFood(getPlayerHead()->x, getPlayerHead()->y, temp))
+				grow();
+			
+			if(canMove())
+				move();
+			else
+				CloseWindow();
+
 			pressed = false;
 			timer = GetTime();
 
 			if(autoHit())
 				CloseWindow();
+
+			foodSpawnRate--;
+		}
+
+		if(foodSpawnRate <= 0){
+			foodSpawn();
+			foodSpawnRate = 5;
 		}
 	}
 }
 
 int main(int argc, char *argv[]) {
 
-	if(!startPlayer()){
+	if(!startPlayer() || !startFood()){
 		printf("\nError on start!\n");
 		return 1;
 	}
@@ -118,6 +150,8 @@ int main(int argc, char *argv[]) {
 	loop();
 
 	CloseWindow();
+
+	// endPlayer();
 
 	return 0;
 }
