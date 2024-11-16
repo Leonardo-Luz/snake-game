@@ -11,8 +11,6 @@
 
 #define TILE		600/20
 
-// NOTE: STOPED ON PLAYER GROW
-
 // NOTE: GLOBAL VARIABLES
 double timer = 0;
 
@@ -25,7 +23,6 @@ void playerMove(){
 
 		aux = aux->next;
 	}
-
 }
 
 void draw( int x, int y ){
@@ -45,11 +42,13 @@ bool canMove(){
 	Node* head = getPlayerHead();
 	int direc = getPlayerDirec();
 
-	if(head->x - (direc == LEFT ? 1 : 0) < 0 || // NOTE: POS X < 0
-		head->x + (direc == RIGHT ? 1 : 0) >= GRID || // NOTE: POS X > 600 / 20
-		head->y - (direc == UP ? 1 : 0) < 0 || // NOTE: POS Y < 0
-		head->y + (direc == DOWN ? 1 : 0) >= GRID // NOTE: POS Y > 600 / 20
-		|| autoHit()
+	int windowOffset = 0;
+	int windowLimit = GRID;
+
+	if(head->x - (direc == LEFT ? 1 : 0) < windowOffset || 
+		head->x + (direc == RIGHT ? 1 : 0) >= windowLimit ||
+		head->y - (direc == UP ? 1 : 0) < windowOffset ||
+		head->y + (direc == DOWN ? 1 : 0) >= windowLimit
 	)
 		return false;
 
@@ -58,43 +57,49 @@ bool canMove(){
 
 void loop(){
 	int auxDirec = 0;
-	
+	bool pressed = false;
+
 	timer = GetTime();
 
 	while(!WindowShouldClose()){
 		draw(round(timer) * TILE, round(timer) * TILE);
 
-		
 
 		auxDirec = GetCharPressed();
 
-		switch((char) auxDirec){
-			case 'h': 
-				changeDirec(LEFT);
-				break;
-			case 'j':
-				changeDirec(DOWN);
-				break;
-			case 'k':
-				changeDirec(UP);
-				break;
-			case 'l':
-				changeDirec(RIGHT);
-				break;
-			case 'v':
-				speedUp(0.05f);
-				break;
-			case 'c':
-				speedDown(0.05f);
-				break;
-			case 'g':
-				grow();
-				break;
+		if(pressed == false){
+			switch((char) auxDirec){
+				case 'h': 
+					pressed = changeDirec(LEFT);
+					break;
+				case 'j':
+					pressed = changeDirec(DOWN);
+					break;
+				case 'k':
+					pressed = changeDirec(UP);
+					break;
+				case 'l':
+					pressed = changeDirec(RIGHT);
+					break;
+				case 'v':
+					speedUp(0.05f);
+					break;
+				case 'c':
+					speedDown(0.05f);
+					break;
+				case 'g':
+					grow();
+					break;
+			}
 		}
 		
 		if(canMove() && ((GetTime() - timer) > getPlayerSpeed())){
 			move();
+			pressed = false;
 			timer = GetTime();
+
+			if(autoHit())
+				CloseWindow();
 		}
 	}
 }

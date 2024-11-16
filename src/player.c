@@ -1,3 +1,4 @@
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,6 +7,8 @@
 Player *player = NULL;
 
 int startPlayer(){
+	srand(time(NULL));
+
 	player = (Player*) malloc(sizeof(Player));
 	
 	if(player == NULL)
@@ -18,17 +21,24 @@ int startPlayer(){
 	if(head == NULL)
 		return 0;
 	
-	
-	//Player Initial Position
-	head->x = 0;
-	head->y = 0;
+	head->x = -1;
+	head->y = -1;
+
+	int windowOffset = 0;
+	int windowLimit = 20;
+
+	while(head->x < windowOffset || head->x > windowLimit || head->y < windowOffset || head->y > windowLimit ){
+		head->x = rand() % 21;
+		head->y = rand() % 21;
+	}
+
 	head->before = NULL;
 	head->next = NULL;
 	
 	player->pts = 0;
 	player->size = 1;
-	player->speed = 1;
-	player->direc = -1;
+	player->speed = 0.6;
+	player->direc = rand() % 4;
 
 	player->head = head;
 	player->last = head;
@@ -102,7 +112,7 @@ void move(){
 }
 
 int canChangeDirec(int newDirec){
-	return ( // FIX: If I input down left when i was going right snake goes through its own body
+	return (
 		(player->direc != UP && newDirec == DOWN) ||
 		(player->direc != DOWN && newDirec == UP) ||
 		(player->direc != LEFT && newDirec == RIGHT) ||
@@ -110,15 +120,19 @@ int canChangeDirec(int newDirec){
 	);
 }
 
-void changeDirec(int newDirec){	
-	if(player->size == 1 || canChangeDirec(newDirec))
+int changeDirec(int newDirec){	
+	if(player->size == 1 || canChangeDirec(newDirec)){
 		player->direc = newDirec;
+		return 1;
+	}
+
+	return 0;
 }
 
 int autoHit(){
 	Node *aux = player->head->next;
 	
-	while(aux != NULL){ // FIX: Snake growns inside her self, making it to stop on spot
+	while(aux != NULL){
 		if(aux->x == player->head->x && aux->y == player->head->y)
 			return 1;
 

@@ -23,11 +23,11 @@ typedef struct{
 int startPlayer();
 void endPlayer();
 
-void loadPlayer(); //talvez n exista
+void loadPlayer(); // NOTE: Maybe wont implement
 
 void grow();
 void move();
-void changeDirec(int newDirec);
+int changeDirec(int newDirec);
 int autoHit();
 
 void speedUp(double num);
