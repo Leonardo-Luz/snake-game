@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <raylib.h>
 #include <stdio.h>
 
@@ -22,13 +21,40 @@ void playerMove(Texture2D head, Texture2D tail, Texture2D body){
 	
 	while(aux != NULL){
 
-		if(aux->before == NULL)
-			DrawTextureRec(head, (Rectangle){0,0, head.width, head.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
-		else if(aux->next == NULL)
-			DrawTextureRec(tail, (Rectangle){0,0, tail.width, tail.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
-		else
-			DrawTextureRec(body, (Rectangle){0,0, body.width, body.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
+		Rectangle image = {
+			0,
+			0,
+			body.width,
+			body.height
+		};
 
+		Vector2 position = {
+			(float) aux->x * TILE,
+			(float) aux->y * TILE
+		};
+			
+		if(aux->before == NULL){
+			image = (Rectangle) {
+				0,
+				0,
+				head.width,
+				head.height * (getPlayerDirec() == UP ? 1 : -1)
+			};
+			
+			DrawTextureRec(head, image, position, RAYWHITE);
+		}
+		else if(aux->next == NULL){
+			image = (Rectangle) {
+				0,
+				0,
+				tail.width,
+				tail.height * (getPlayerDirec() == UP ? 1 : -1)
+			};
+	
+			DrawTextureRec(tail, image, position, RAYWHITE);
+		}
+		else
+			DrawTextureRec(body, image, position, RAYWHITE);
 		aux = aux->next;
 	}
 }
@@ -40,7 +66,6 @@ void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
 
 
 	while(aux != NULL){
-
 		Texture2D image = strcmp(aux->special, "commun") == 0 ? apple : strcmp(aux->special, "speedup") == 0 ? berry : strcmp(aux->special, "speeddown") == 0 ? banana : apple;
 
 		// DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
