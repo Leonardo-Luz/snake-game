@@ -11,47 +11,57 @@
 #define SCREEN_HEIGHT	600
 #define FPS		60
 
-#define TILE		600/20
+#define TILE		SCREEN_HEIGHT/GRID
 
 // NOTE: GLOBAL VARIABLES
 double timer = 0;
 
 // NOTE: FUNCTIONS
-void playerMove(){
+void playerMove(Texture2D head, Texture2D tail, Texture2D body){
 	Node* aux = getPlayerHead();
 	
 	while(aux != NULL){
-		DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, BLACK);
+
+		if(aux->before == NULL)
+			DrawTextureRec(head, (Rectangle){0,0, head.width, head.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
+		else if(aux->next == NULL)
+			DrawTextureRec(tail, (Rectangle){0,0, tail.width, tail.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
+		else
+			DrawTextureRec(body, (Rectangle){0,0, body.width, body.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
 
 		aux = aux->next;
 	}
 }
 
-void foodDraw(){
+void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
 	Food* foods = getFoods();
 	
 	FNode* aux = foods->first;
 
+
 	while(aux != NULL){
-		DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
+
+		Texture2D image = strcmp(aux->special, "commun") == 0 ? apple : strcmp(aux->special, "speedup") == 0 ? berry : strcmp(aux->special, "speeddown") == 0 ? banana : apple;
+
+		// DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
+		DrawTextureRec(image, (Rectangle){0,0, image.width, image.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
 
 		aux = aux->next;
 	}
 }
 
-void draw( int x, int y ){
+void draw(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Texture2D tail, Texture2D body){
 	BeginDrawing();
 
 	ClearBackground(RAYWHITE);
 
-	DrawRectangle(x, y, TILE, TILE, YELLOW);
 	DrawText("H J K L - LEFT DOWN UP RIGHT", TILE, TILE, 20, BLACK);
 	DrawText(TextFormat("Points %d", *getPlayerPts()), TILE, TILE * 2, 18, BLACK);
 	DrawText(TextFormat("Speed %f", getPlayerSpeed()), TILE, TILE * 3, 18, BLACK);
 
-	foodDraw();
+	foodDraw(apple, banana, berry);
 
-	playerMove();
+	playerMove(head, tail, body);
 
 	EndDrawing();
 }
@@ -73,7 +83,7 @@ bool canMove(){
 	return true;
 }
 
-void loop(){
+void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Texture2D tail, Texture2D body){
 	int auxDirec = 0;
 	bool pressed = false;
 	int foodSpawnRate = getSpawnFoodRate();
@@ -81,7 +91,7 @@ void loop(){
 	timer = GetTime();
 
 	while(!WindowShouldClose()){
-		draw(round(timer) * TILE, round(timer) * TILE);
+		draw(apple, banana, berry, head, tail, body);
 
 
 		auxDirec = GetCharPressed();
@@ -159,13 +169,35 @@ int main(int argc, char *argv[]) {
 
 	// NOTE: RAYLIB INIT
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake Game");
-	SetTargetFPS(FPS);
 
-	loop();
+	// NOTE: Image Load
+	Image icon = LoadImage("src/images/head.png");
+
+	Texture2D apple = LoadTexture("src/images/Apple.png");
+	Texture2D banana = LoadTexture("src/images/Banana.png");
+	Texture2D berry = LoadTexture("src/images/blueberry.png");
+
+	Texture2D head = LoadTexture("src/images/head.png");
+	Texture2D tail = LoadTexture("src/images/tail.png");
+	Texture2D body = LoadTexture("src/images/body.png");
+	
+	SetWindowIcon(icon);
+	SetTargetFPS(FPS);
+	UnloadImage(icon);
+
+	loop(apple, banana, berry, head, tail, body);
 
 	CloseWindow();
 
 	// endPlayer();
+
+	// NOTE: Image unload
+	UnloadTexture(apple);
+	UnloadTexture(banana);
+	UnloadTexture(berry);
+	UnloadTexture(head);
+	UnloadTexture(tail);
+	UnloadTexture(body);
 
 	return 0;
 }

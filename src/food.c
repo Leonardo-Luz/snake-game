@@ -32,11 +32,11 @@ int startFood(){
 	if(foods == NULL)
 		return 0;
 	
-	foods->max = MAXFOOD;
+	foods->max = 2;
 	foods->last = NULL;
 	foods->first = NULL;
 	foods->size = 0;
-	foods->spawnRate = 5;
+	foods->spawnRate = 10;
 	
 	return 1;
 }
@@ -71,7 +71,7 @@ void insert(FNode* target){
 	foods->size++;
 }
 
-FNode* pop(int x, int y){ // FIX:
+FNode* pop(int x, int y){
 	if(foods->size == 0)
 		return NULL;
 
@@ -98,7 +98,7 @@ FNode* pop(int x, int y){ // FIX:
 
 			FNode* temp = aux;
 
-			aux = aux->next; // aux->next is never null
+			aux = aux->next;
 			aux->before = temp->before;
 
 			if(temp->before == NULL) 

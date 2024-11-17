@@ -1,5 +1,3 @@
-
-#define MAXFOOD 5
 #define MAXSPECIALFOOD 3
 
 typedef struct FNode{
