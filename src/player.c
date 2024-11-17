@@ -137,9 +137,15 @@ int autoHit(){
 }
 
 void speedUp(double num){
+	if(player->speed - num < 0)
+		return;
+
 	player->speed -= num;
 }
 void speedDown(double num){
+	if(player->speed - num > 1.8)
+		return;
+
 	player->speed += num;
 }
 

@@ -31,7 +31,7 @@ void endFood();
 
 void foodSpawn();
 
-int consumeFood(int x, int y, int *pts);
+char* consumeFood(int x, int y, int *pts);
 
 Food* getFoods();
 int getFoodSize();

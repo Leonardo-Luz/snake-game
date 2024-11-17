@@ -43,11 +43,11 @@ void draw( int x, int y ){
 	ClearBackground(RAYWHITE);
 
 	DrawRectangle(x, y, TILE, TILE, YELLOW);
-	DrawText("Hello World", TILE, TILE, 20, BLACK);
-
-	playerMove();
+	DrawText("H J K L - LEFT DOWN UP RIGHT", TILE, TILE, 20, BLACK);
 
 	foodDraw();
+
+	playerMove();
 
 	EndDrawing();
 }

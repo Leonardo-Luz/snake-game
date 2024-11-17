@@ -157,9 +157,6 @@ void foodSpawn(){
 char* consumeFood(int x, int y, int *pts){
 	FNode* aux = pop(x, y);
 
-	if(aux == NULL)
-		return NULL;
-
 	char* special = aux->special;
 
 	(*pts)+= aux->pts;
