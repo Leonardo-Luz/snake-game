@@ -26,16 +26,14 @@ void playerMove(){
 }
 
 void foodDraw(){
-	Food** foods = getFoods();
+	Food* foods = getFoods();
 	
-	int count = 0;
-	Food* aux = foods[0];
+	FNode* aux = foods->first;
 
 	while(aux != NULL){
 		DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
 
-		count++;
-		aux = foods[count];
+		aux = aux->next;
 	}
 }
 
@@ -74,7 +72,7 @@ bool canMove(){
 void loop(){
 	int auxDirec = 0;
 	bool pressed = false;
-	int foodSpawnRate = 5;
+	int foodSpawnRate = getSpawnFoodRate();
 
 	timer = GetTime();
 
@@ -131,7 +129,7 @@ void loop(){
 
 		if(foodSpawnRate <= 0){
 			foodSpawn();
-			foodSpawnRate = 5;
+			foodSpawnRate = getSpawnFoodRate();
 		}
 	}
 }
