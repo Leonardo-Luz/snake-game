@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <raylib.h>
@@ -45,7 +46,8 @@ void draw( int x, int y ){
 
 	DrawRectangle(x, y, TILE, TILE, YELLOW);
 	DrawText("H J K L - LEFT DOWN UP RIGHT", TILE, TILE, 20, BLACK);
-	DrawText(TextFormat("Points %d", *getPlayerPts()), TILE * 2, TILE * 2, 18, BLACK);
+	DrawText(TextFormat("Points %d", *getPlayerPts()), TILE, TILE * 2, 18, BLACK);
+	DrawText(TextFormat("Speed %f", getPlayerSpeed()), TILE, TILE * 3, 18, BLACK);
 
 	foodDraw();
 
@@ -117,12 +119,14 @@ void loop(){
 			if(aux != NULL){
 				grow();
 
-				if(strcmp(aux, "speedup")){
-					speedUp(0.05f);
+				if(strcmp(aux, "speedup") == 0){
+					speedUp(0.01f);
 				}
-				else if(strcmp(aux, "speeddown")){
-					speedDown(0.05f);
+				else if(strcmp(aux, "speeddown") == 0){
+					speedDown(0.01f);
 				}
+
+				free(aux);
 			}
 			
 			if(canMove())

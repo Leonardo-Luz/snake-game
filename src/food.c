@@ -132,6 +132,9 @@ void foodSpawn(){
 	food->next = NULL;
 	food->before = NULL;
 
+	
+	food->special = (char*) malloc(sizeof(char) * 20);
+
 	while(find(food) != NULL){
 		food->x = rand() % 20;
 		food->y = rand() % 20;
@@ -143,7 +146,7 @@ void foodSpawn(){
 			if(random >= specialFood[i].rarity)
 			{
 				food->pts = specialFood[i].pts;
-				food->special = specialFood[i].name;
+				strcpy(food->special, specialFood[i].name);
 
 				insert(food);
 				return;
@@ -151,7 +154,7 @@ void foodSpawn(){
 		}
 	
 	food->pts = specialFood[0].pts;
-	food->special = specialFood[0].name;
+	strcpy(food->special, specialFood[0].name);
 }
 
 char* consumeFood(int x, int y, int *pts){
@@ -160,7 +163,8 @@ char* consumeFood(int x, int y, int *pts){
 	if(aux == NULL)
 		return NULL;
 
-	char* special = aux->special;
+	char* special = (char*) malloc(sizeof(char) * 20);
+	strcpy(special, aux->special);
 
 	(*pts) += aux->pts;
 	

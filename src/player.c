@@ -37,7 +37,7 @@ int startPlayer(){
 	
 	player->pts = 0;
 	player->size = 1;
-	player->speed = 0.6;
+	player->speed = 0.3;
 	player->direc = rand() % 4;
 
 	player->head = head;
