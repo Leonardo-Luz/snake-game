@@ -165,6 +165,6 @@ Node* getPlayerHead(){
 	return player->head;
 }
 
-int getPlayerPts(){
-	return player->pts;
+int* getPlayerPts(){
+	return &player->pts;
 }

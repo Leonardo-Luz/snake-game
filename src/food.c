@@ -1,32 +1,34 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #include "food.h"
 
 Food *foods = NULL;
 
-Special specialFood[MAXSPECIALFOOD] = {
-	{
-		0,
-		10,
-		"comun"
-	},
-	{
-		65,
-		20,
-		"speedup"
-	},
-	{
-		35,
-		-5,
-		"speeddown"
-	}
-};
+Special* specialFood = NULL;
 
 int startFood(){
 	foods = (Food*) malloc(sizeof(Food));
 	
+	specialFood = (Special*) malloc(sizeof(Special) * MAXSPECIALFOOD);
+
+	specialFood[0].pts = 10;
+	specialFood[0].rarity = 0;
+	specialFood[0].name = (char*) malloc(sizeof(char) * 20);
+	strcpy(specialFood[0].name, "commun");
+
+	specialFood[1].rarity = 35;
+	specialFood[1].pts = 5;
+	specialFood[1].name = (char*) malloc(sizeof(char) * 20);
+	strcpy(specialFood[1].name, "speeddown");
+
+	specialFood[2].rarity = 65;
+	specialFood[2].pts = 20;
+	specialFood[2].name = (char*) malloc(sizeof(char) * 20);
+	strcpy(specialFood[2].name, "speedup");
+
 	if(foods == NULL)
 		return 0;
 	
@@ -86,8 +88,6 @@ FNode* pop(int x, int y){ // FIX:
 
 	while (aux != NULL) {
 		if(aux->x == x && aux->y == y){
-			int pts = aux->pts;
-
 			if(aux->next == NULL){
 				foods->last = foods->last->before;
 				foods->last->next = NULL;
@@ -138,7 +138,7 @@ void foodSpawn(){
 	}
 	
 	if(random >= 0 && random <= 100)
-		for(i = MAXSPECIALFOOD; i >= 0; i--)
+		for(i = MAXSPECIALFOOD -1; i >= 0; i--)
 		{
 			if(random >= specialFood[i].rarity)
 			{
@@ -162,8 +162,8 @@ char* consumeFood(int x, int y, int *pts){
 
 	char* special = aux->special;
 
-	(*pts)+= aux->pts;
-
+	(*pts) += aux->pts;
+	
 	free(aux);
 	return special;
 }

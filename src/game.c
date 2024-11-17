@@ -1,3 +1,4 @@
+#include <string.h>
 #include <math.h>
 #include <raylib.h>
 #include <stdio.h>
@@ -44,6 +45,7 @@ void draw( int x, int y ){
 
 	DrawRectangle(x, y, TILE, TILE, YELLOW);
 	DrawText("H J K L - LEFT DOWN UP RIGHT", TILE, TILE, 20, BLACK);
+	DrawText(TextFormat("Points %d", *getPlayerPts()), TILE * 2, TILE * 2, 18, BLACK);
 
 	foodDraw();
 
@@ -109,9 +111,19 @@ void loop(){
 		}
 		
 		if(((GetTime() - timer) > getPlayerSpeed())){
-			int* temp; // FIX: getPlayerPts() isnt working
-			if(consumeFood(getPlayerHead()->x, getPlayerHead()->y, temp))
+			
+			char* aux = consumeFood(getPlayerHead()->x, getPlayerHead()->y, getPlayerPts());
+			
+			if(aux != NULL){
 				grow();
+
+				if(strcmp(aux, "speedup")){
+					speedUp(0.05f);
+				}
+				else if(strcmp(aux, "speeddown")){
+					speedDown(0.05f);
+				}
+			}
 			
 			if(canMove())
 				move();

@@ -34,7 +34,7 @@ void speedUp(double num);
 void speedDown(double num);
 
 double getPlayerSpeed();
-int getPlayerPts();
+int* getPlayerPts();
 int getPlayerDirec();
 int getPlayerSize();
 Node* getPlayerHead();

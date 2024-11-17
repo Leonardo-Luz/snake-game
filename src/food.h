@@ -14,7 +14,7 @@ typedef struct FNode{
 typedef struct Special{
 	int rarity;
 	int pts;
-	char name[20];
+	char *name;
 }Special;
 
 typedef struct Food{
