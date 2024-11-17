@@ -16,45 +16,65 @@
 double timer = 0;
 
 // NOTE: FUNCTIONS
+void playerBody(Node* aux, Texture2D texture){
+	Rectangle image;
+
+	Vector2 position = {
+		(float) aux->x * TILE,
+		(float) aux->y * TILE
+	};
+	image = (Rectangle) {
+		(float)0,
+		(float)0,
+		(float)texture.width,
+		(float)texture.height
+	};
+
+	
+	float rotation = 0;
+
+	switch(getPlayerDirec()){
+		case UP:
+			rotation = 0.0f;
+			break;
+		case DOWN:
+			rotation = 180.0f;
+			break;
+		case LEFT:
+			rotation = 270.0f;
+			break;
+		case RIGHT:
+			rotation = 90.0f;
+			break;
+	}
+
+	DrawTexturePro(texture, 
+		image,
+		(Rectangle){
+			position.x + (float)TILE/2,
+			position.y + (float)TILE/2,
+			(float)TILE,
+			(float)TILE,
+		},
+		(Vector2){ (float) TILE/2, (float) TILE/2},
+		rotation,
+		RAYWHITE
+	);
+
+
+}
 void playerMove(Texture2D head, Texture2D tail, Texture2D body){
 	Node* aux = getPlayerHead();
 	
 	while(aux != NULL){
-
-		Rectangle image = {
-			0,
-			0,
-			body.width,
-			body.height
-		};
-
-		Vector2 position = {
-			(float) aux->x * TILE,
-			(float) aux->y * TILE
-		};
-			
 		if(aux->before == NULL){
-			image = (Rectangle) {
-				0,
-				0,
-				head.width,
-				head.height * (getPlayerDirec() == UP ? 1 : -1)
-			};
-			
-			DrawTextureRec(head, image, position, RAYWHITE);
+			playerBody(aux, head);
 		}
-		else if(aux->next == NULL){
-			image = (Rectangle) {
-				0,
-				0,
-				tail.width,
-				tail.height * (getPlayerDirec() == UP ? 1 : -1)
-			};
-	
-			DrawTextureRec(tail, image, position, RAYWHITE);
-		}
+		else if(aux->next == NULL)
+			playerBody(aux, tail);
 		else
-			DrawTextureRec(body, image, position, RAYWHITE);
+			playerBody(aux, body);
+
 		aux = aux->next;
 	}
 }
@@ -68,7 +88,6 @@ void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
 	while(aux != NULL){
 		Texture2D image = strcmp(aux->special, "commun") == 0 ? apple : strcmp(aux->special, "speedup") == 0 ? berry : strcmp(aux->special, "speeddown") == 0 ? banana : apple;
 
-		// DrawRectangle(aux->x * TILE, aux->y * TILE, TILE, TILE, YELLOW);
 		DrawTextureRec(image, (Rectangle){0,0, image.width, image.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
 
 		aux = aux->next;
