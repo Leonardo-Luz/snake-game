@@ -21,6 +21,8 @@ typedef struct{
 }Player;
 
 int startPlayer();
+
+void cleanPlayer();
 void endPlayer();
 
 void loadPlayer(); // NOTE: Maybe wont implement

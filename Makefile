@@ -1,5 +1,5 @@
 # Compiler and flags
-CC=gcc -IC                # Use GCC as the compiler
+CC=gcc                # Use GCC as the compiler
 CFLAGS=-Wall -g       # Compiler flags (enable warnings, include debug info)
 
 # Libraries

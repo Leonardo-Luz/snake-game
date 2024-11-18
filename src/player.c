@@ -46,14 +46,28 @@ int startPlayer(){
 	return 1;
 }
 
-void endPlayer(){
-	Node *aux = player->last->before;
+void cleanPlayer(){
+	Node *aux = player->last;
 	
-	while(aux->before != NULL)
+	while(aux != NULL && aux->before != NULL)
 	{
-		free(aux->next);
 		aux = aux->before;
+		free(aux->next);
 	}
+
+	// NOTE: Reseting player stats
+	player->speed = 0.3;
+	player->direc = -1;
+	player->pts = 0;
+	player->last = player->head;
+	player->size = 1;
+	player->head->next = NULL;
+	player->head->x = rand() % 20;
+	player->head->y = rand() % 20;
+}
+
+void endPlayer(){
+	cleanPlayer();
 
 	free(player->head);
 	free(player);

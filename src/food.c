@@ -9,9 +9,7 @@ Food *foods = NULL;
 
 Special* specialFood = NULL;
 
-int startFood(){
-	foods = (Food*) malloc(sizeof(Food));
-	
+int startSpecialFood(){
 	specialFood = (Special*) malloc(sizeof(Special) * MAXSPECIALFOOD);
 
 	specialFood[0].pts = 10;
@@ -29,6 +27,11 @@ int startFood(){
 	specialFood[2].name = (char*) malloc(sizeof(char) * 20);
 	strcpy(specialFood[2].name, "speedup");
 
+	return 1;
+}
+int startFood(){
+	foods = (Food*) malloc(sizeof(Food));
+	
 	if(foods == NULL)
 		return 0;
 	
@@ -41,7 +44,32 @@ int startFood(){
 	return 1;
 }
 
+void cleanFoods(){
+	printf("\nTEST");
+
+	FNode* aux = foods->last;
+
+	if(aux == NULL)
+		return;
+
+	while(aux->before != NULL){
+		aux = aux->before;
+
+		printf("\nTEST %d", aux->x);
+
+		free(aux->next->special);
+		free(aux->next);
+	}
+
+	printf("\nTESTF %d", foods->first->x);
+	free(foods->first->special);
+	free(foods->first);
+
+	foods->size = 0;
+}
+
 void endFood(){ // FIX:
+	cleanFoods();
 	free(foods);
 }
 
@@ -152,13 +180,10 @@ void foodSpawn(){
 				return;
 			}
 		}
-	
-	food->pts = specialFood[0].pts;
-	strcpy(food->special, specialFood[0].name);
 }
 
 char* consumeFood(int x, int y, int *pts){
-	FNode* aux = pop(x, y);
+	FNode* aux = pop(x, y); // FIX: rename to Remove();
 
 	if(aux == NULL)
 		return NULL;
@@ -168,6 +193,7 @@ char* consumeFood(int x, int y, int *pts){
 
 	(*pts) += aux->pts;
 	
+	free(aux->special);
 	free(aux);
 	return special;
 }

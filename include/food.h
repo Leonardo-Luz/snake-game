@@ -24,7 +24,10 @@ typedef struct Food{
 }Food;
 
 
+int startSpecialFood();
 int startFood();
+
+void cleanFoods();
 void endFood();
 
 void foodSpawn();
