@@ -5,6 +5,10 @@
 
 #include "../include/game.h"
 
+#define CONTINUE	0
+#define CONTROLLS	1
+#define MAIN_MENU	2
+
 #define GRID		20
 #define SCREEN_WIDTH	600
 #define SCREEN_HEIGHT	600
@@ -14,9 +18,11 @@
 
 // NOTE: GLOBAL VARIABLES
 double timer = 0;
+bool pause = false;
+int option = CONTINUE;
 
-// NOTE: FUNCTIONS
-void playerBody(Node* aux, Texture2D texture){
+// NOTE: DRAW FUNCTIONS
+void playerBody(Node* aux, Texture2D texture){ // FIX: Add direc to player Node
 	Rectangle image;
 
 	Vector2 position = {
@@ -48,7 +54,6 @@ void playerBody(Node* aux, Texture2D texture){
 			break;
 	}
 
-	// DrawRectangle(position.x, position.y, TILE,TILE,BLACK);
 	DrawTexturePro(texture, 
 		image,
 		(Rectangle){
@@ -113,6 +118,54 @@ void draw(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 	EndDrawing();
 }
 
+void pauseMenu(int input){
+	switch(input){
+		case 74:
+			option++;
+			break;
+		case 75:
+			option--;
+			break;
+		case 257:
+			switch(option){
+				case CONTINUE:
+					pause = !pause;
+					break;
+				case CONTROLLS: // TODO:
+					printf("\nWIP");
+					break;
+				case MAIN_MENU:
+					CloseWindow();
+					break;
+
+			}
+			break;
+	}
+
+	if(option > 2)
+		option = CONTINUE;
+	else if(option < 0)
+		option = MAIN_MENU;
+
+
+	BeginDrawing();
+	
+	DrawRectangle(240, 200, 120, 20, option == CONTINUE ? LIGHTGRAY : RAYWHITE);
+	DrawText("Continue", 250, 200, 20, option == CONTINUE ? YELLOW : DARKGRAY);
+
+	DrawRectangle(240, 220, 120, 20, option == CONTROLLS ? LIGHTGRAY : RAYWHITE);
+	DrawText("Controlls", 250, 220, 20, option == CONTROLLS ? YELLOW : DARKGRAY);
+
+	DrawRectangle(240, 240, 120, 20, option == MAIN_MENU ? LIGHTGRAY : RAYWHITE);
+	DrawText("Main Menu", 250, 240, 20, option == MAIN_MENU ? YELLOW : DARKGRAY);
+	EndDrawing();
+}
+
+void gameOverMenu(){
+
+}
+
+// NOTE: LOGIC FUNCTIONS
 bool canMove(){
 	Node* head = getPlayerHead();
 	int direc = getPlayerDirec();
@@ -130,6 +183,7 @@ bool canMove(){
 	return true;
 }
 
+// NOTE: MAIN FUNCTIONS
 void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Texture2D tail, Texture2D body){
 	int auxDirec = 0;
 	bool pressed = false;
@@ -138,32 +192,41 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 	timer = GetTime();
 
 	while(!WindowShouldClose()){
+		auxDirec = GetKeyPressed();
+
+		if(auxDirec == 256){
+			pause = !pause;
+		}
+
+		if(pause){
+			pauseMenu(auxDirec);
+
+			continue;
+		}
+
 		draw(apple, banana, berry, head, tail, body);
-
-
-		auxDirec = GetCharPressed();
-
+		
 		if(pressed == false){
-			switch((char) auxDirec){
-				case 'h': 
+			switch(auxDirec){
+				case 72: 
 					pressed = changeDirec(LEFT);
 					break;
-				case 'j':
+				case 74:
 					pressed = changeDirec(DOWN);
 					break;
-				case 'k':
+				case 75:
 					pressed = changeDirec(UP);
 					break;
-				case 'l':
+				case 76:
 					pressed = changeDirec(RIGHT);
 					break;
-				case 'v':
+				case 86:
 					speedUp(0.1f);
 					break;
-				case 'c':
+				case 67:
 					speedDown(0.05f);
 					break;
-				case 'g':
+				case 71:
 					grow();
 					break;
 			}
@@ -194,8 +257,9 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 			pressed = false;
 			timer = GetTime();
 
-			if(autoHit())
+			if(autoHit()){
 				CloseWindow();
+			}
 
 			foodSpawnRate--;
 		}
@@ -206,7 +270,6 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 		}
 	}
 }
-
 int main(int argc, char *argv[]) {
 
 	if(!startPlayer() || !startFood()){
@@ -216,6 +279,7 @@ int main(int argc, char *argv[]) {
 
 	// NOTE: RAYLIB INIT
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake Game");
+	SetExitKey(0);
 
 	// NOTE: Image Load
 	Image icon = LoadImage("assets/head.png");
@@ -232,11 +296,12 @@ int main(int argc, char *argv[]) {
 	SetTargetFPS(FPS);
 	UnloadImage(icon);
 
-	loop(apple, banana, berry, head, tail, body);
+	if(pause)
+		pauseMenu(0);
+	else
+		loop(apple, banana, berry, head, tail, body);
 
-	CloseWindow();
-
-	// endPlayer();
+	endPlayer();
 
 	// NOTE: Image unload
 	UnloadTexture(apple);
