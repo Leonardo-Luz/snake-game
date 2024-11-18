@@ -3,7 +3,7 @@
 #include <raylib.h>
 #include <stdio.h>
 
-#include "game.h"
+#include "../include/game.h"
 
 #define GRID		20
 #define SCREEN_WIDTH	600
@@ -48,6 +48,7 @@ void playerBody(Node* aux, Texture2D texture){
 			break;
 	}
 
+	// DrawRectangle(position.x, position.y, TILE,TILE,BLACK);
 	DrawTexturePro(texture, 
 		image,
 		(Rectangle){
@@ -99,10 +100,12 @@ void draw(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 
 	ClearBackground(RAYWHITE);
 
-	DrawText("H J K L - LEFT DOWN UP RIGHT", TILE, TILE, 20, BLACK);
-	DrawText(TextFormat("Points %d", *getPlayerPts()), TILE, TILE * 2, 18, BLACK);
-	DrawText(TextFormat("Speed %f", getPlayerSpeed()), TILE, TILE * 3, 18, BLACK);
+	DrawText("H J K L - MOVE", 10, 0, 20, BLACK);
+	DrawText(TextFormat("Score %d", *getPlayerPts()), 10, 20 * 1, 18, BLACK);
+	DrawText(TextFormat("Highscore: %f", getPlayerSpeed()), 10, 20 * 2, 18, BLACK);
 
+	DrawText(TextFormat("Speed: %.3f", getPlayerSpeed()), 450, 0, 18, BLACK);
+	DrawText(TextFormat("Play time: %.3f", GetTime()), 450, 20 * 1, 18, BLACK);
 	foodDraw(apple, banana, berry);
 
 	playerMove(head, tail, body);
@@ -155,7 +158,7 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 					pressed = changeDirec(RIGHT);
 					break;
 				case 'v':
-					speedUp(0.05f);
+					speedUp(0.1f);
 					break;
 				case 'c':
 					speedDown(0.05f);
@@ -215,15 +218,15 @@ int main(int argc, char *argv[]) {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake Game");
 
 	// NOTE: Image Load
-	Image icon = LoadImage("src/images/head.png");
+	Image icon = LoadImage("assets/head.png");
 
-	Texture2D apple = LoadTexture("src/images/Apple.png");
-	Texture2D banana = LoadTexture("src/images/Banana.png");
-	Texture2D berry = LoadTexture("src/images/blueberry.png");
+	Texture2D apple = LoadTexture("assets/Apple.png");
+	Texture2D banana = LoadTexture("assets/Banana.png");
+	Texture2D berry = LoadTexture("assets/blueberry.png");
 
-	Texture2D head = LoadTexture("src/images/head.png");
-	Texture2D tail = LoadTexture("src/images/tail.png");
-	Texture2D body = LoadTexture("src/images/body.png");
+	Texture2D head = LoadTexture("assets/head.png");
+	Texture2D tail = LoadTexture("assets/tail.png");
+	Texture2D body = LoadTexture("assets/body.png");
 	
 	SetWindowIcon(icon);
 	SetTargetFPS(FPS);

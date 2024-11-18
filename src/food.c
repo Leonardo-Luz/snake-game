@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "food.h"
+#include "../include/food.h"
 
 Food *foods = NULL;
 
@@ -32,11 +32,11 @@ int startFood(){
 	if(foods == NULL)
 		return 0;
 	
-	foods->max = 2;
+	foods->max = 5;
 	foods->last = NULL;
 	foods->first = NULL;
 	foods->size = 0;
-	foods->spawnRate = 10;
+	foods->spawnRate = 5;
 	
 	return 1;
 }

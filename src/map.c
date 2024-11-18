@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "map.h"
+#include "../include/map.h"
 
 #define UP 0
 #define DOWN 1
