@@ -342,9 +342,9 @@ int main(int argc, char *argv[]) {
 	SetWindowIcon(icon);
 	SetTargetFPS(FPS);
 
-	Texture2D apple = LoadTexture("assets/Apple.png");
-	Texture2D banana = LoadTexture("assets/Banana.png");
-	Texture2D berry = LoadTexture("assets/blueberry.png");
+	Texture2D apple = LoadTexture("assets/apple.png");
+	Texture2D banana = LoadTexture("assets/banana.png");
+	Texture2D berry = LoadTexture("assets/berry.png");
 
 	Texture2D head = LoadTexture("assets/head.png");
 	Texture2D tail = LoadTexture("assets/tail.png");
