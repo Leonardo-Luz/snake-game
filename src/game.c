@@ -162,8 +162,7 @@ void pauseMenu(int input){
 }
 
 void retryFunc(){
-	printf("\nENTERED RETRY FUNC \n");
-	cleanFoods(); // FIX:
+	cleanFoods();
 	cleanPlayer();
 	
 	pressed = false;
@@ -187,7 +186,6 @@ void gameOverMenu(int input){
 		case 257:
 			switch(option){
 				case 0: // NOTE: retry
-					printf("\nOPTION RETRY\n");
 					retryFunc();
 					break;
 				case 1: // NOTE: mainMenu[WIP]
@@ -340,8 +338,9 @@ int main(int argc, char *argv[]) {
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake Game");
 	SetExitKey(0);
 
-	// NOTE: Image Load
 	Image icon = LoadImage("assets/head.png");
+	SetWindowIcon(icon);
+	SetTargetFPS(FPS);
 
 	Texture2D apple = LoadTexture("assets/Apple.png");
 	Texture2D banana = LoadTexture("assets/Banana.png");
@@ -351,8 +350,6 @@ int main(int argc, char *argv[]) {
 	Texture2D tail = LoadTexture("assets/tail.png");
 	Texture2D body = LoadTexture("assets/body.png");
 	
-	SetWindowIcon(icon);
-	SetTargetFPS(FPS);
 	UnloadImage(icon);
 
 	if(pause)
@@ -360,7 +357,6 @@ int main(int argc, char *argv[]) {
 	else
 		loop(apple, banana, berry, head, tail, body);
 
-	// FIX: Memory not freed properly 
 	endPlayer();
 	endFood();
 

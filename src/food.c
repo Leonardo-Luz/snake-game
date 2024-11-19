@@ -45,30 +45,27 @@ int startFood(){
 }
 
 void cleanFoods(){
-	printf("\nTEST");
-
-	FNode* aux = foods->last;
+	FNode* aux = foods->first;
 
 	if(aux == NULL)
 		return;
-
+	
 	while(aux->before != NULL){
 		aux = aux->before;
-
-		printf("\nTEST %d", aux->x);
 
 		free(aux->next->special);
 		free(aux->next);
 	}
 
-	printf("\nTESTF %d", foods->first->x);
 	free(foods->first->special);
 	free(foods->first);
 
+	foods->last = NULL;
+	foods->first = NULL;
 	foods->size = 0;
 }
 
-void endFood(){ // FIX:
+void endFood(){
 	cleanFoods();
 	free(foods);
 }
