@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXSCORE 10
-
 Score* scores;
 int size = 0;
 FILE* scoreFile = NULL;

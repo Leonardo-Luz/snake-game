@@ -1,3 +1,4 @@
+#define MAXSCORE 10
 
 typedef struct Score{
 	char username[20];

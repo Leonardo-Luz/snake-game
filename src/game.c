@@ -243,6 +243,7 @@ void newScoreMenu(int input){
 		saveScore(newScore);
 		gameStateBef = gameState;
 		gameState = GAME_OVER_STATE;
+		
 		return;
 	}
 
@@ -453,7 +454,7 @@ bool canMove(){
 }
 
 void death(){
-	if(*getPlayerPts() > getScoreByIndex(getScoresSize()-1).pts)
+	if(*getPlayerPts() > 0 && (getScoresSize() < MAXSCORE || *getPlayerPts() > getScoreByIndex(getScoresSize()-1).pts))
 		gameState = NEW_SCORE;
 	else
 		gameState = GAME_OVER_STATE;
