@@ -17,7 +17,7 @@
 #define MAIN_MENU_STATE 0
 #define GAME_OVER_STATE 1
 #define PAUSE_STATE	2
-#define CONTROLLS_STATE 3
+#define CONTROLS_STATE 3
 #define SCORE_STATE	4
 #define NEW_SCORE	5
 
@@ -192,7 +192,7 @@ void pauseMenu(int input){
 					break;
 				case 1: // TODO: controlls menu
 					gameStateBef = gameState;
-					gameState = CONTROLLS_STATE;
+					gameState = CONTROLS_STATE;
 					option = 0;
 					break;
 				case 2: // NOTE: mainMenu[WIP]
@@ -223,7 +223,7 @@ void pauseMenu(int input){
 	DrawText("Continue", 250, 200, 20, option == resume ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 220, 120, 20, option == controlls ? LIGHTGRAY : RAYWHITE);
-	DrawText("Controlls", 250, 220, 20, option == controlls ? DARKPURPLE : DARKGRAY);
+	DrawText("controlls", 250, 220, 20, option == controlls ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 240, 120, 20, option == mainMenu ? LIGHTGRAY : RAYWHITE);
 	DrawText("Main Menu", 250, 240, 20, option == mainMenu ? DARKPURPLE : DARKGRAY);
@@ -351,7 +351,7 @@ void mainMenu(int input){
 					break;
 				case 2: // NOTE: controlls
 					gameStateBef = gameState;
-					gameState = CONTROLLS_STATE;
+					gameState = CONTROLS_STATE;
 					option = 0;
 					break;
 				case 3: // NOTE: exit
@@ -379,7 +379,7 @@ void mainMenu(int input){
 	DrawText("Scores", 250, 240, 20, option == scores ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 260, 120, 20, option == controlls ? LIGHTGRAY : RAYWHITE);
-	DrawText("Controlls", 250, 260, 20, option == controlls? DARKPURPLE : DARKGRAY);
+	DrawText("controlls", 250, 260, 20, option == controlls? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 280, 120, 20, option == exit ? LIGHTGRAY : RAYWHITE);
 	DrawText("Exit", 250, 280, 20, option == exit ? DARKPURPLE : DARKGRAY);
@@ -397,7 +397,7 @@ void controllsMenu(int input){
 
 	ClearBackground(RAYWHITE);
 	
-	DrawText("CONTROLLS", 200, 180, 30, DARKGRAY);
+	DrawText("CONTROLS", 200, 180, 30, DARKGRAY);
 
 	DrawText("H - LEFT", 230, 220, 20, DARKGRAY);
 	DrawText("J - DOWN", 230, 250, 20, DARKGRAY);
@@ -479,7 +479,7 @@ void loop(){
 			case PAUSE_STATE:
 				pauseMenu(auxDirec);
 				continue;
-			case CONTROLLS_STATE:
+			case CONTROLS_STATE:
 				controllsMenu(auxDirec);
 				continue;
 			case SCORE_STATE:
