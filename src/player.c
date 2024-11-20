@@ -28,8 +28,8 @@ int startPlayer(){
 	int windowLimit = 20;
 
 	while(head->x < windowOffset || head->x > windowLimit || head->y < windowOffset || head->y > windowLimit ){
-		head->x = rand() % 20;
-		head->y = rand() % 20;
+		head->x = 1 + rand() % (19 - 1);
+		head->y = 1 + rand() % (19 - 1);
 	}
 
 	head->before = NULL;

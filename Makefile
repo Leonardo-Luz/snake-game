@@ -6,7 +6,7 @@ CFLAGS=-Wall -g       # Compiler flags (enable warnings, include debug info)
 LIBS=-lraylib -lGL -lm -lpthread -ldl -lrt -lX11  # Raylib and system libraries
 
 # Source and output
-SRC=./src/game.c ./src/player.c ./src/food.c           # Source file
+SRC=./src/game.c ./src/player.c ./src/food.c ./src/score.c           # Source file
 OBJ=$(SRC:.c=.o)     # Object file (game.c -> game.o)
 EXEC=game            # Name of the executable
 

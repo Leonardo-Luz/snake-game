@@ -14,15 +14,47 @@
 
 #define MULT_TD		6
 
+#define MAIN_MENU_STATE 0
+#define GAME_OVER_STATE 1
+#define PAUSE_STATE	2
+#define CONTROLLS_STATE 3
+#define SCORE_STATE	4
+
+// TODO: Change draw and menu functions to other files ? 
+
 // NOTE: GLOBAL VARIABLES
 double timer = 0;
-bool pause = false;
-bool gameOver = false;
+double resetTime = 0;
 bool pressed = false;
 int option = 0;
+int gameState = MAIN_MENU_STATE;
+int gameStateBef = -1;
+
+Texture2D apple;
+Texture2D banana;
+Texture2D berry;
+Texture2D head;
+Texture2D tail;
+Texture2D body;
+
+void quit(){
+	printf("test");
+	endScore();
+	endPlayer();
+	endFood();
+
+	UnloadTexture(apple);
+	UnloadTexture(banana);
+	UnloadTexture(berry);
+	UnloadTexture(head);
+	UnloadTexture(tail);
+	UnloadTexture(body);
+
+	CloseWindow();
+}
 
 // NOTE: DRAW FUNCTIONS
-void playerBody(Node* aux, Texture2D texture){ // FIX: Add direc to player Node
+void playerBody(Node* aux, Texture2D texture){ // FIX: Add direc to player Node to rotate texture
 	Rectangle image;
 
 	Vector2 position = {
@@ -67,10 +99,8 @@ void playerBody(Node* aux, Texture2D texture){ // FIX: Add direc to player Node
 			RAYWHITE
 		);
 	}
-
-
 }
-void playerMove(Texture2D head, Texture2D tail, Texture2D body){
+void playerMove(){
 	Node* aux = getPlayerHead();
 	
 	while(aux != NULL){
@@ -86,7 +116,7 @@ void playerMove(Texture2D head, Texture2D tail, Texture2D body){
 	}
 }
 
-void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
+void foodDraw(){
 	Food* foods = getFoods();
 	
 	FNode* aux = foods->first;
@@ -112,28 +142,39 @@ void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
 	}
 }
 
-void draw(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Texture2D tail, Texture2D body){
+void draw(){
 	BeginDrawing();
 
 	ClearBackground(RAYWHITE);
 
-	DrawText("H J K L - MOVE", 10, 0, 20, BLACK);
-	DrawText(TextFormat("Score %d", *getPlayerPts()), 10, 20 * 1, 18, BLACK);
-	DrawText(TextFormat("Highscore: %f", getPlayerSpeed()), 10, 20 * 2, 18, BLACK);
+	playerMove();
+	foodDraw();
 
-	DrawText(TextFormat("Speed: %.3f", getPlayerSpeed()), 450, 0, 18, BLACK);
-	DrawText(TextFormat("Play time: %.3f", GetTime()), 450, 20 * 1, 18, BLACK);
-	foodDraw(apple, banana, berry);
+	
+	DrawText(TextFormat("Score %d", *getPlayerPts()), 10, 20 * 1, 18, ColorAlpha(BLACK, 0.5));
+	DrawText(TextFormat("Highscore: %f", getHighscore()), 10, 20 * 2, 18, ColorAlpha(BLACK, 0.5));
 
-	playerMove(head, tail, body);
+	DrawText(TextFormat("Play time: %.3f", GetTime() - resetTime), 450, 20 * 1, 18, ColorAlpha(BLACK, 0.5));
+	DrawText(TextFormat("Speed: %.3f", getPlayerSpeed()), 450, 20 * 2, 18, ColorAlpha(BLACK, 0.5));
 
 	EndDrawing();
 }
 
+void resetFunc(){
+	cleanFoods();
+	cleanPlayer();
+	
+	resetTime = GetTime();
+	pressed = false;
+}
 void pauseMenu(int input){
+	if(input == 256){
+		gameState = -1;
+		
+		return;
+	}
 
-	// FIX: not in use
-	const int resume = 0, controlls = 1, mainMenu = 2;
+	const int resume = 0, controlls = 1, mainMenu = 2, exit = 3;
 
 	switch(input){
 		case 74:
@@ -145,48 +186,55 @@ void pauseMenu(int input){
 		case 257:
 			switch(option){
 				case 0: // NOTE: resume
-					pause = !pause;
+					gameState = -1;
+					option = 0;
 					break;
 				case 1: // TODO: controlls menu
-					printf("\nWIP");
+					gameStateBef = gameState;
+					gameState = CONTROLLS_STATE;
+					option = 0;
 					break;
 				case 2: // NOTE: mainMenu[WIP]
-					CloseWindow();
+					resetFunc();
+
+					gameState = MAIN_MENU_STATE;
+					option = 0;
+					break;
+				case 3: // NOTE: exit
+					quit();
 					break;
 			}
 			break;
 	}
 
-	if(option > 2)
+	if(option > 3)
 		option = resume;
 	else if(option < 0)
 		option = mainMenu;
 
-
 	BeginDrawing();
 	
+	if(gameStateBef == PAUSE_STATE) ClearBackground(RAYWHITE);
+
+	DrawText("PAUSE", 240, 160, 30, DARKGRAY);
+
 	DrawRectangle(240, 200, 120, 20, option == resume ? LIGHTGRAY : RAYWHITE);
-	DrawText("Continue", 250, 200, 20, option == resume ? YELLOW : DARKGRAY);
+	DrawText("Continue", 250, 200, 20, option == resume ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 220, 120, 20, option == controlls ? LIGHTGRAY : RAYWHITE);
-	DrawText("Controlls", 250, 220, 20, option == controlls ? YELLOW : DARKGRAY);
+	DrawText("Controlls", 250, 220, 20, option == controlls ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 240, 120, 20, option == mainMenu ? LIGHTGRAY : RAYWHITE);
-	DrawText("Main Menu", 250, 240, 20, option == mainMenu ? YELLOW : DARKGRAY);
+	DrawText("Main Menu", 250, 240, 20, option == mainMenu ? DARKPURPLE : DARKGRAY);
+
+	DrawRectangle(240, 260, 120, 20, option == exit ? LIGHTGRAY : RAYWHITE);
+	DrawText("Exit", 250, 260, 20, option == exit ? DARKPURPLE : DARKGRAY);
 	EndDrawing();
 }
 
-void retryFunc(){
-	cleanFoods();
-	cleanPlayer();
-	
-	pressed = false;
-	gameOver = false;
-}
 void gameOverMenu(int input){
 	
-	// FIX: not in use
-	const int retry = 0, mainMenu = 1;
+	const int retry = 0, mainMenu = 1, exit = 2;
 
 	switch(input){
 		case 74:
@@ -196,39 +244,132 @@ void gameOverMenu(int input){
 			--option;
 			break;
 		case 256:
-			CloseWindow();
+			quit();
 			break;
 		case 257:
 			switch(option){
 				case 0: // NOTE: retry
-					retryFunc();
+					resetFunc();
+					gameState = -1;
+					option = 0;
 					break;
 				case 1: // NOTE: mainMenu[WIP]
-					CloseWindow();
+					resetFunc();
+					gameState = MAIN_MENU_STATE;
+					option = 0;
+					break;
+				case 2: // NOTE: exit
+					quit();
 					break;
 			}
 			break;
 	}
 
-	if(option > 1)
+	if(option > 2)
 		option = retry;
 	else if(option < 0)
 		option = mainMenu;
 
-
 	BeginDrawing();
-	
-	DrawText("GAME OVER", 250, 180, 20, DARKGRAY);
-	DrawText(TextFormat("SCORE: %d", *getPlayerPts()), 250, 200, 20, DARKGRAY);
+
+	DrawText("GAME OVER", 200, 160, 30, DARKGRAY);
+	DrawText(TextFormat("SCORE: %d", *getPlayerPts()), 200, 190, 15, DARKGRAY);
 
 	DrawRectangle(240, 220, 120, 20, option == retry ? LIGHTGRAY : RAYWHITE);
-	DrawText("Retry", 250, 220, 20, option == retry ? YELLOW : DARKGRAY);
+	DrawText("Retry", 250, 220, 20, option == retry ? DARKPURPLE : DARKGRAY);
 
 	DrawRectangle(240, 240, 120, 20, option == mainMenu ? LIGHTGRAY : RAYWHITE);
-	DrawText("Main Menu", 250, 240, 20, option == mainMenu ? YELLOW : DARKGRAY);
+	DrawText("Main Menu", 250, 240, 20, option == mainMenu ? DARKPURPLE : DARKGRAY);
+
+	DrawRectangle(240, 260, 120, 20, option == exit ? LIGHTGRAY : RAYWHITE);
+	DrawText("Exit", 250, 260, 20, option == exit ? DARKPURPLE : DARKGRAY);
 	EndDrawing();
 }
 
+void mainMenu(int input){
+	const int start = 0, scores = 1, controlls = 2, exit = 3;
+
+	switch(input){
+		case 74:
+			++option;
+			break;
+		case 75:
+			--option;
+			break;
+		case 256:
+			quit();
+			break;
+		case 257:
+			switch(option){
+				case 0: // NOTE: start
+					gameState = -1;
+					option = 0;
+					break;
+				case 1: // NOTE: scores
+					printf("\nWIP\n");
+					option = 0;
+					break;
+				case 2: // NOTE: controlls
+					gameStateBef = gameState;
+					gameState = CONTROLLS_STATE;
+					option = 0;
+					break;
+				case 3: // NOTE: exit
+					quit();
+					break;
+			}
+			break;
+	}
+
+	if(option > 3)
+		option = start;
+	else if(option < 0)
+		option = exit;
+
+	BeginDrawing();
+
+	ClearBackground(RAYWHITE);
+	
+	DrawText("SNAKE GAME", 200, 180, 30, DARKGRAY);
+
+	DrawRectangle(240, 220, 120, 20, option == start ? LIGHTGRAY : RAYWHITE);
+	DrawText("Start", 250, 220, 20, option == start ? DARKPURPLE : DARKGRAY);
+
+	DrawRectangle(240, 240, 120, 20, option == scores ? LIGHTGRAY : RAYWHITE);
+	DrawText("Scores", 250, 240, 20, option == scores ? DARKPURPLE : DARKGRAY);
+
+	DrawRectangle(240, 260, 120, 20, option == controlls ? LIGHTGRAY : RAYWHITE);
+	DrawText("Controlls", 250, 260, 20, option == controlls? DARKPURPLE : DARKGRAY);
+
+	DrawRectangle(240, 280, 120, 20, option == exit ? LIGHTGRAY : RAYWHITE);
+	DrawText("Exit", 250, 280, 20, option == exit ? DARKPURPLE : DARKGRAY);
+	EndDrawing();
+}
+
+void controllsMenu(int input){
+	if(input == 256 || input == 257){
+		gameState = gameStateBef;
+		
+		return;
+	}
+
+	BeginDrawing();
+
+	ClearBackground(RAYWHITE);
+	
+	DrawText("CONTROLLS", 200, 180, 30, DARKGRAY);
+
+	DrawText("H - LEFT", 230, 220, 20, DARKGRAY);
+	DrawText("J - DOWN", 230, 250, 20, DARKGRAY);
+	DrawText("K - UP", 230, 270, 20, DARKGRAY);
+	DrawText("L - RIGHT", 230, 300, 20, DARKGRAY);
+
+	DrawText("ESC - PAUSE", 230, 340, 20, DARKGRAY);
+
+	DrawRectangle(200, 400, 120, 20, LIGHTGRAY);
+	DrawText("Back", 220, 400, 20, DARKPURPLE);
+	EndDrawing();
+}
 // NOTE: LOGIC FUNCTIONS
 bool canMove(){
 	Node* head = getPlayerHead();
@@ -247,33 +388,48 @@ bool canMove(){
 	return true;
 }
 
+void death(){
+	Score aux;
+
+	aux.pts = *getPlayerPts();
+	strcpy(aux.username, "main");
+
+	if(saveScore(aux))
+		printf("\n SUCCESS\n");
+	else
+		printf("\n FULL\n");
+
+	gameState = GAME_OVER_STATE;
+}
+
 // NOTE: MAIN FUNCTIONS
-void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Texture2D tail, Texture2D body){
+void loop(){
 	int auxDirec = 0;
 	int foodSpawnRate = getSpawnFoodRate();
-
 	timer = GetTime();
 
 	while(!WindowShouldClose()){
 		auxDirec = GetKeyPressed();
 
-		if(gameOver){
-			gameOverMenu(auxDirec);
 
-			continue;
+		switch(gameState){
+			case MAIN_MENU_STATE:
+				mainMenu(auxDirec);
+				continue;
+			case GAME_OVER_STATE:
+				gameOverMenu(auxDirec);
+				continue;
+			case PAUSE_STATE:
+				pauseMenu(auxDirec);
+				continue;
+			case CONTROLLS_STATE:
+				controllsMenu(auxDirec);
+				continue;
+			case SCORE_STATE:
+				break;
 		}
 
-		if(auxDirec == 256){
-			pause = !pause;
-		}
-
-		if(pause){
-			pauseMenu(auxDirec);
-
-			continue;
-		}
-
-		draw(apple, banana, berry, head, tail, body);
+		draw();
 		
 		if(pressed == false){
 			switch(auxDirec){
@@ -298,11 +454,30 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 				case 71:
 					grow();
 					break;
+				case 256:
+					gameState = PAUSE_STATE;
+					continue;
 			}
 		}
 		
 		if(getPlayerDirec() >= 0 && ((GetTime() - timer) > getPlayerSpeed())){
 			
+			
+			if(canMove())
+				move();
+			else{
+				death();
+				continue;
+			}
+
+			pressed = false;
+			timer = GetTime();
+
+			if(autoHit()){
+				death();
+				continue;
+			}
+
 			char* aux = consumeFood(getPlayerHead()->x, getPlayerHead()->y, getPlayerPts());
 			
 			if(aux != NULL){
@@ -317,22 +492,6 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 
 				free(aux);
 			}
-			
-			if(canMove())
-				move();
-			else{
-				gameOver = true;
-				continue;
-			}
-
-			pressed = false;
-			timer = GetTime();
-
-			if(autoHit()){
-				gameOver = true;
-				continue;
-			}
-
 			foodSpawnRate--;
 		}
 
@@ -344,7 +503,7 @@ void loop(Texture2D apple, Texture2D banana, Texture2D berry, Texture2D head, Te
 }
 int main(int argc, char *argv[]) {
 
-	if(!startPlayer() ||!startSpecialFood() || !startFood()){
+	if(!startPlayer() ||!startSpecialFood() || !startFood() || !loadScore()){
 		printf("\nError on start!\n");
 		return 1;
 	}
@@ -357,31 +516,21 @@ int main(int argc, char *argv[]) {
 	SetWindowIcon(icon);
 	SetTargetFPS(FPS);
 
-	Texture2D apple = LoadTexture("assets/apple.png");
-	Texture2D banana = LoadTexture("assets/banana.png");
-	Texture2D berry = LoadTexture("assets/berry.png");
+	apple = LoadTexture("assets/apple.png");
+	banana = LoadTexture("assets/banana.png");
+	berry = LoadTexture("assets/berry.png");
 
-	Texture2D head = LoadTexture("assets/head.png");
-	Texture2D tail = LoadTexture("assets/tail.png");
-	Texture2D body = LoadTexture("assets/body.png");
+	head = LoadTexture("assets/head.png");
+	tail = LoadTexture("assets/tail.png");
+	body = LoadTexture("assets/body.png");
 	
 	UnloadImage(icon);
 
-	if(pause)
+	if(gameState == PAUSE_STATE)
 		pauseMenu(0);
 	else
-		loop(apple, banana, berry, head, tail, body);
+		loop();
 
-	endPlayer();
-	endFood();
-
-	// NOTE: Image unload
-	UnloadTexture(apple);
-	UnloadTexture(banana);
-	UnloadTexture(berry);
-	UnloadTexture(head);
-	UnloadTexture(tail);
-	UnloadTexture(body);
 
 	return 0;
 }
