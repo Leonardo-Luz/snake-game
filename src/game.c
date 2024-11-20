@@ -12,6 +12,8 @@
 
 #define TILE		SCREEN_HEIGHT/GRID
 
+#define MULT_TD		6
+
 // NOTE: GLOBAL VARIABLES
 double timer = 0;
 bool pause = false;
@@ -50,19 +52,21 @@ void playerBody(Node* aux, Texture2D texture){ // FIX: Add direc to player Node
 			rotation = 90.0f;
 			break;
 	}
-
-	DrawTexturePro(texture, 
-		image,
-		(Rectangle){
-			position.x + (float)TILE/2,
-			position.y + (float)TILE/2,
-			(float)TILE,
-			(float)TILE,
-		},
-		(Vector2){ (float) TILE/2, (float) TILE/2},
-		rotation,
-		RAYWHITE
-	);
+	
+	for(int i = 0; i < MULT_TD; i++){ // NOTE: Make sprite 3d -- it was made by accident
+		DrawTexturePro(texture, 
+			image,
+			(Rectangle){
+				position.x - i + (float)TILE/2,
+				position.y - i + (float)TILE/2,
+				(float)TILE,
+				(float)TILE,
+			},
+			(Vector2){ (float) TILE/2, (float) TILE/2},
+			rotation,
+			RAYWHITE
+		);
+	}
 
 
 }
@@ -89,9 +93,20 @@ void foodDraw(Texture2D apple, Texture2D banana, Texture2D berry){
 
 
 	while(aux != NULL){
-		Texture2D image = strcmp(aux->special, "commun") == 0 ? apple : strcmp(aux->special, "speedup") == 0 ? berry : strcmp(aux->special, "speeddown") == 0 ? banana : apple;
+		Texture2D image = 
+			strcmp(aux->special, "commun") == 0 ? apple : 
+			strcmp(aux->special, "speedup") == 0 ? berry : 
+			strcmp(aux->special, "speeddown") == 0 ? banana : 
+			apple;
 
-		DrawTextureRec(image, (Rectangle){0,0, image.width, image.height}, (Vector2){ (float) aux->x * TILE, (float) aux->y * TILE }, RAYWHITE);
+		for(int i = 0; i < MULT_TD; i++)
+			DrawTextureRec(image, 
+				(Rectangle){0,0, image.width, image.height}, 
+				(Vector2){ 
+					(float) aux->x * TILE + i, 
+					(float) aux->y * TILE + i
+				}, 
+				RAYWHITE);
 
 		aux = aux->next;
 	}
