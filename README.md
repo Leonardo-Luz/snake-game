@@ -1,7 +1,7 @@
 # Snake Game
 
-**Author:** Leonardo Luz
-_Fullstack Developer_
+**Author:** Leonardo Luz <br/>
+_Fullstack Developer_ <br/>
 [**Repository**](https://github.com/leonardo-luz/snake-game)
 
 ## Summary
@@ -71,3 +71,4 @@ make
 ```
 
 ### License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
