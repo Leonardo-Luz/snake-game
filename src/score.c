@@ -9,6 +9,9 @@ int size = 0;
 FILE* scoreFile = NULL;
 
 void sort(){
+	if(size == 0)
+		return;
+
 	for(int i = 0; i < size-1; i ++)
 		for(int j = i + 1; j < size; j++){
 			if(scores[i].pts < scores[j].pts){
@@ -37,12 +40,9 @@ int loadScore(){
 
 	rewind(scoreFile);
 
-
 	for(int i = 0; i < size; i++){
-		fread(&scores[i], sizeof(Score), i, scoreFile);
+		fread(&scores[i], sizeof(Score), 1, scoreFile);
 	}
-
-	printf("\nSize: %d", size);
 
 	sort();
 
@@ -50,43 +50,43 @@ int loadScore(){
 }
 
 int saveScore(Score newScore){
-	printf("\nSIZE: %d\n", size);
-	printf("\nTEST SCORE : %d", newScore.pts);
-
 	if(newScore.pts == 0) return 0;
-	
-	if(size > MAXSCORE -1 && newScore.pts > scores[size].pts){
-		scores[size] = newScore;
 
-		printf("\n\n!INSIDE ARRAY: %d", scores[size].pts);
+	if(size > MAXSCORE -1 && newScore.pts > scores[size-1].pts){
+		scores[size-1] = newScore;
+
+		sort();
 
 		return 1;
 	}
 	else if(size > MAXSCORE -1){
 		return 0;
 	}
+
 	scores[size] = newScore;
-	printf("\n\n!INSIDE ARRAY: %d", scores[size].pts);
 	size++;
 
 	sort();
-
-	printf("\nSCORE ENTER");
 
 	return 1;
 }
 
 void endScore(){
-	printf("\nTESTE3\n");
+	rewind(scoreFile);
+	
 	for(int i = 0; i < size; i++)
 		fwrite(&scores[i], sizeof(Score), 1, scoreFile);
 
-	printf("\nTESTE4\n");
 	fclose(scoreFile);
+	free(scores);
 }
 
 Score* getScores(){
 	return scores;
+}
+
+Score getScoreByIndex(int index){
+	return scores[index];
 }
 
 int getScoresSize(){

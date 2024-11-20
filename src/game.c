@@ -19,6 +19,7 @@
 #define PAUSE_STATE	2
 #define CONTROLLS_STATE 3
 #define SCORE_STATE	4
+#define NEW_SCORE	5
 
 // TODO: Change draw and menu functions to other files ? 
 
@@ -152,7 +153,7 @@ void draw(){
 
 	
 	DrawText(TextFormat("Score %d", *getPlayerPts()), 10, 20 * 1, 18, ColorAlpha(BLACK, 0.5));
-	DrawText(TextFormat("Highscore: %f", getHighscore()), 10, 20 * 2, 18, ColorAlpha(BLACK, 0.5));
+	DrawText(TextFormat("Highscore: %d", getHighscore()), 10, 20 * 2, 18, ColorAlpha(BLACK, 0.5));
 
 	DrawText(TextFormat("Play time: %.3f", GetTime() - resetTime), 450, 20 * 1, 18, ColorAlpha(BLACK, 0.5));
 	DrawText(TextFormat("Speed: %.3f", getPlayerSpeed()), 450, 20 * 2, 18, ColorAlpha(BLACK, 0.5));
@@ -232,6 +233,41 @@ void pauseMenu(int input){
 	EndDrawing();
 }
 
+char username[20] = "";
+Score newScore;
+void newScoreMenu(int input){
+	if(input == 256 || input == 257){
+		newScore.pts = *getPlayerPts();
+		strcpy(newScore.username, username);
+
+		saveScore(newScore);
+		gameStateBef = gameState;
+		gameState = GAME_OVER_STATE;
+		return;
+	}
+
+	if(input == 259){
+		username[strlen(username)-1] = '\0';
+	}
+	else{
+		char letter = input;
+		strcat(username, &letter);
+	}
+
+
+	BeginDrawing();
+
+	ClearBackground(RAYWHITE);
+	
+	DrawText(TextFormat("NEW SCORE: %d", *getPlayerPts()), 180, 220, 30, DARKGRAY);
+
+	DrawText(TextFormat("USERNAME: %s", username), 180, 250, 20, DARKGRAY);
+
+	DrawRectangle(240, 280, 120, 30, LIGHTGRAY);
+	DrawText("SAVE", 260, 285, 20, DARKPURPLE);
+
+	EndDrawing();
+}
 void gameOverMenu(int input){
 	
 	const int retry = 0, mainMenu = 1, exit = 2;
@@ -272,6 +308,9 @@ void gameOverMenu(int input){
 
 	BeginDrawing();
 
+	if(gameStateBef == NEW_SCORE)
+		ClearBackground(RAYWHITE);
+
 	DrawText("GAME OVER", 200, 160, 30, DARKGRAY);
 	DrawText(TextFormat("SCORE: %d", *getPlayerPts()), 200, 190, 15, DARKGRAY);
 
@@ -306,7 +345,8 @@ void mainMenu(int input){
 					option = 0;
 					break;
 				case 1: // NOTE: scores
-					printf("\nWIP\n");
+					gameStateBef = gameState;
+					gameState = SCORE_STATE;
 					option = 0;
 					break;
 				case 2: // NOTE: controlls
@@ -370,6 +410,30 @@ void controllsMenu(int input){
 	DrawText("Back", 220, 400, 20, DARKPURPLE);
 	EndDrawing();
 }
+
+void scoresMenu(int input){
+	if(input == 256 || input == 257){
+		gameState = gameStateBef;
+		
+		return;
+	}
+
+	BeginDrawing();
+
+	ClearBackground(RAYWHITE);
+	
+	DrawText("SCORES", 200, 100, 30, DARKGRAY);
+
+	for(int i = 0; i < getScoresSize(); i++){
+		Score aux = getScoreByIndex(i);
+		DrawText(TextFormat("%d - %s - %d", i+1, aux.username, aux.pts), 230, 170 + 20 * i, 20, DARKGRAY);
+	}
+
+	DrawRectangle(200, 400, 120, 20, LIGHTGRAY);
+	DrawText("Back", 220, 400, 20, DARKPURPLE);
+	EndDrawing();
+}
+
 // NOTE: LOGIC FUNCTIONS
 bool canMove(){
 	Node* head = getPlayerHead();
@@ -389,17 +453,10 @@ bool canMove(){
 }
 
 void death(){
-	Score aux;
-
-	aux.pts = *getPlayerPts();
-	strcpy(aux.username, "main");
-
-	if(saveScore(aux))
-		printf("\n SUCCESS\n");
+	if(*getPlayerPts() > getScoreByIndex(getScoresSize()-1).pts)
+		gameState = NEW_SCORE;
 	else
-		printf("\n FULL\n");
-
-	gameState = GAME_OVER_STATE;
+		gameState = GAME_OVER_STATE;
 }
 
 // NOTE: MAIN FUNCTIONS
@@ -426,7 +483,12 @@ void loop(){
 				controllsMenu(auxDirec);
 				continue;
 			case SCORE_STATE:
-				break;
+				scoresMenu(auxDirec);
+				continue;
+			case NEW_SCORE:
+				newScoreMenu(auxDirec);
+				continue;
+
 		}
 
 		draw();

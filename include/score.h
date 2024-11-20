@@ -8,6 +8,7 @@ int loadScore();
 int saveScore(Score newScore);
 
 Score* getScores();
+Score getScoreByIndex(int index);
 void endScore();
 int getScoresSize();
 int getHighscore();
