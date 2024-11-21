@@ -4,8 +4,8 @@
 _Fullstack Developer_ <br/>
 [**Repository**](https://github.com/leonardo-luz/snake-game) <br/>
 
-[![LICENSE](https://img.shields.io/badge/LICENSE-MIT-blue?style=flat-square)](LICENSE.md);
-[![DOCUMENTATION](https://img.shields.io/badge/DOCUMENTATION-GITHUB-blue?style=flat-square)](README.md);
+[![LICENSE](https://img.shields.io/badge/LICENSE-MIT-blue?style=flat-square)](LICENSE.md)
+[![DOCUMENTATION](https://img.shields.io/badge/DOCUMENTATION-GITHUB-blue?style=flat-square)](README.md)
 
 ## Summary
 1. [Description](#Description)
@@ -33,17 +33,22 @@ This project is a recreation of the classic Snake game, where the player control
 
 ### Assets
 
-1. Head
+1. Head <br/>
 ![Snake Head](./assets/head.png)
-2. Body
+
+2. Body <br/>
 ![Snake Body](./assets/body.png)
-3. Tail
+
+3. Tail <br/>
 ![Snake Tail](./assets/tail.png)
-4. Apple
+
+4. Apple <br/>
 ![Snake Head](./assets/apple.png)
-5. Banana
+
+5. Banana <br/>
 ![Snake Head](./assets/banana.png)
-6. Berry
+
+6. Berry <br/>
 ![Berry](./assets/berry.png)
 
 ## Requirements
