@@ -20,16 +20,22 @@ This project is a recreation of the classic Snake game, where the player control
 
 ## Preview
 
-### Gameplay
+![Gameplay](./images/preview.gif)
 
 ### Menus
 
-1. Main Menu
-2. Pause Menu
-3. Game Over Menu
-4. Controls Menu
-5. Scores Menu
-6. New Score Menu
+1. Main Menu <br/>
+![Main Menu](./images/mainMenu.png)
+2. Pause Menu <br/>
+![Pause Menu](./images/pauseMenu.png)
+3. Game Over Menu <br/>
+![Game Over Menu](./images/gameOverMenu.png)
+4. Controls Menu <br/>
+![Controls Menu](./images/controlsMenu.png)
+5. Scores Menu <br/>
+![Scores Menu](./images/scoresMenu.png)
+6. New Score Menu <br/>
+![New Score Menu](./images/newScoreMenu.png)
 
 ### Assets
 
