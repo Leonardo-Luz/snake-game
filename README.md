@@ -91,7 +91,7 @@ This project is a recreation of the classic Snake game, where the player control
 
 To install the necessary dependencies, run the following commands:
 
-```
+```bash
 sudo apt install make gcc
 
 ```
@@ -99,13 +99,13 @@ After installing make and gcc, you will also need to install the Raylib library.
 You can follow the official installation instructions for Raylib [here](https://www.raylib.com/).
 
 #### Clone Repository
-```
+```bash
 git clone https://github.com/leonardo-luz/snake-game
 cd snake-game
 ```
 
 #### Build & Run
-```
+```bash
 make
 ./game
 ```
