@@ -1,8 +1,8 @@
 # Snake Game
 
-**Author:** Leonardo Luz <br/>
-_Fullstack Developer_ <br/>
-[**Repository**](https://github.com/leonardo-luz/snake-game) <br/>
+**Author:** Leonardo Luz
+
+[**Repository**](https://github.com/leonardo-luz/snake-game)
 
 [![LICENSE](https://img.shields.io/badge/LICENSE-MIT-blue?style=flat-square)](LICENSE.md)
 [![DOCUMENTATION](https://img.shields.io/badge/DOCUMENTATION-GITHUB-blue?style=flat-square)](README.md)
@@ -18,44 +18,66 @@ _Fullstack Developer_ <br/>
 
 This project is a recreation of the classic Snake game, where the player controls a snake that grows longer with each food consumed. The game ends if the snake collides with the wall or itself. Special foods trigger specific effects, and the game tracks score and highscore, providing a competitive edge for players. The game includes multiple menus like Start, Pause, and Game Over, with a rich visual interface featuring images for foods and the snake.
 
-## Preview
+<details><summary> Preview </summary>
 
-![Gameplay](./images/preview.gif)
+  ![Gameplay](./images/preview.gif)
 
-### Menus
+  <details><summary> Menus </summary>
 
-1. Main Menu <br/>
-![Main Menu](./images/mainMenu.png)
-2. Pause Menu <br/>
-![Pause Menu](./images/pauseMenu.png)
-3. Game Over Menu <br/>
-![Game Over Menu](./images/gameOverMenu.png)
-4. Controls Menu <br/>
-![Controls Menu](./images/controlsMenu.png)
-5. Scores Menu <br/>
-![Scores Menu](./images/scoresMenu.png)
-6. New Score Menu <br/>
-![New Score Menu](./images/newScoreMenu.png)
+  1. Main Menu
 
-### Assets
+  ![Main Menu](./images/mainMenu.png)
 
-1. Head <br/>
-![Snake Head](./assets/head.png)
+  2. Pause Menu
 
-2. Body <br/>
-![Snake Body](./assets/body.png)
+  ![Pause Menu](./images/pauseMenu.png)
 
-3. Tail <br/>
-![Snake Tail](./assets/tail.png)
+  3. Game Over Menu
 
-4. Apple <br/>
-![Snake Head](./assets/apple.png)
+  ![Game Over Menu](./images/gameOverMenu.png)
 
-5. Banana <br/>
-![Snake Head](./assets/banana.png)
+  4. Controls Menu
 
-6. Berry <br/>
-![Berry](./assets/berry.png)
+  ![Controls Menu](./images/controlsMenu.png)
+
+  5. Scores Menu
+
+  ![Scores Menu](./images/scoresMenu.png)
+
+  6. New Score Menu
+
+  ![New Score Menu](./images/newScoreMenu.png)
+
+  </details>
+
+  <details><summary> Assets </summary>
+
+  1. Head
+
+  ![Snake Head](./assets/head.png)
+
+  2. Body
+
+  ![Snake Body](./assets/body.png)
+
+  3. Tail
+
+  ![Snake Tail](./assets/tail.png)
+
+  4. Apple
+
+  ![Snake Head](./assets/apple.png)
+
+  5. Banana
+
+  ![Snake Head](./assets/banana.png)
+
+  6. Berry
+
+  ![Berry](./assets/berry.png)
+
+  </details>
+</details>
 
 ## Requirements
 
